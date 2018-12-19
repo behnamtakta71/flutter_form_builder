@@ -309,16 +309,21 @@ class MyHomePage extends StatelessWidget {
                   title: Text(country),
                 );
               },
+              onChanged: (typed){
+                print("Country name: $typed");
+              },
               suggestionsCallback: (query) {
                 if (query.length != 0) {
                   var lowercaseQuery = query.toLowerCase();
                   return allCountries.where((country) {
                     return country.toLowerCase().contains(lowercaseQuery);
                   }).toList(growable: false)
-                    ..sort((a, b) => a
-                        .toLowerCase()
-                        .indexOf(lowercaseQuery)
-                        .compareTo(b.toLowerCase().indexOf(lowercaseQuery)));
+                    ..sort((a, b) =>
+                        a
+                            .toLowerCase()
+                            .indexOf(lowercaseQuery)
+                            .compareTo(
+                            b.toLowerCase().indexOf(lowercaseQuery)));
                 } else {
                   return allCountries;
                 }
@@ -337,16 +342,18 @@ class MyHomePage extends StatelessWidget {
                   var lowercaseQuery = query.toLowerCase();
                   return mockResults.where((profile) {
                     return profile.name
-                            .toLowerCase()
-                            .contains(query.toLowerCase()) ||
+                        .toLowerCase()
+                        .contains(query.toLowerCase()) ||
                         profile.email
                             .toLowerCase()
                             .contains(query.toLowerCase());
                   }).toList(growable: false)
-                    ..sort((a, b) => a.name
-                        .toLowerCase()
-                        .indexOf(lowercaseQuery)
-                        .compareTo(b.name.toLowerCase().indexOf(lowercaseQuery)));
+                    ..sort((a, b) =>
+                        a.name
+                            .toLowerCase()
+                            .indexOf(lowercaseQuery)
+                            .compareTo(
+                            b.name.toLowerCase().indexOf(lowercaseQuery)));
                 } else {
                   return const <AppProfile>[];
                 }
@@ -391,6 +398,9 @@ class MyHomePage extends StatelessWidget {
                 FormBuilderInputOption(value: "Option 2"),
                 FormBuilderInputOption(value: "Option 3"),
               ],
+              onChanged: (data){
+                print("new dropdown value: $data");
+              }
             ),
             FormBuilderInput.number(
               attribute: "age",
@@ -414,13 +424,15 @@ class MyHomePage extends StatelessWidget {
                 type: FormBuilderInput.TYPE_PHONE,
                 attribute: "phone",
                 label: "Phone",
-                hint: "Including country code (+254)"
-                //require: true,
-                ),
-            FormBuilderInput.password(
-              attribute: "password",
-              label: "Password",
               //require: true,
+            ),
+            FormBuilderInput.password(
+                attribute: "password",
+                label: "Password",
+                //require: true,
+                onChanged: (data) {
+                  print("Password changed to: $data");
+                }
             ),
             FormBuilderInput.datePicker(
               label: "Date of Birth",
@@ -456,7 +468,7 @@ class MyHomePage extends StatelessWidget {
                 label: "I accept the terms and conditions",
                 attribute: "accept_terms",
                 hint:
-                    "Kindly make sure you've read all the terms and conditions",
+                "Kindly make sure you've read all the terms and conditions",
                 validator: (value) {
                   if (!value) return "Accept terms to continue";
                 }),
@@ -464,7 +476,7 @@ class MyHomePage extends StatelessWidget {
                 label: "I accept the terms and conditions",
                 attribute: "accept_terms_switch",
                 hint:
-                    "Kindly make sure you've read all the terms and conditions",
+                "Kindly make sure you've read all the terms and conditions",
                 validator: (value) {
                   if (!value) return "Accept terms to continue";
                 }),
@@ -502,9 +514,9 @@ class MyHomePage extends StatelessWidget {
                   .toList(),
             ),
           ],
-          onChanged: (formValue) {
+          /*onChanged: (formValue) {
             print(formValue);
-          },
+          },*/
           onSubmit: (formValue) {
             if (formValue != null) {
               print(formValue);
@@ -528,9 +540,9 @@ class AppProfile {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is AppProfile &&
-          runtimeType == other.runtimeType &&
-          name == other.name;
+          other is AppProfile &&
+              runtimeType == other.runtimeType &&
+              name == other.name;
 
   @override
   int get hashCode => name.hashCode;

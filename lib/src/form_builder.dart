@@ -110,6 +110,15 @@ class _FormBuilderState extends State<FormBuilder> {
               keyboardType = TextInputType.text;
               break;
           }
+          TextEditingController _controller = TextEditingController(
+              text: formControl.value != null ? "${formControl.value}" : '');
+          String _currentValue = _controller.text;
+          _controller.addListener(() {
+            bool textChanged = _currentValue != _controller.text;
+            if (textChanged && formControl.onChanged != null)
+              formControl.onChanged(_controller.text);
+            _currentValue = _controller.text;
+          });
           formControlsList.add(TextFormField(
             key: Key(formControl.attribute),
             decoration: InputDecoration(
@@ -117,8 +126,7 @@ class _FormBuilderState extends State<FormBuilder> {
               hintText: formControl.hint,
               helperText: formControl.hint,
             ),
-            initialValue:
-                formControl.value != null ? "${formControl.value}" : '',
+            controller: _controller,
             maxLines: formControl.type == FormBuilderInput.TYPE_MULTILINE_TEXT
                 ? 5
                 : 1,
@@ -186,6 +194,13 @@ class _FormBuilderState extends State<FormBuilder> {
         case FormBuilderInput.TYPE_TYPE_AHEAD:
           TextEditingController _typeAheadController =
               TextEditingController(text: formControl.value);
+          String _currentValue = _typeAheadController.text;
+          _typeAheadController.addListener(() {
+            bool textChanged = _currentValue != _typeAheadController.text;
+            if (textChanged && formControl.onChanged != null)
+              formControl.onChanged(_typeAheadController.text);
+            _currentValue = _typeAheadController.text;
+          });
           formControlsList.add(TypeAheadFormField(
             key: Key(formControl.attribute),
             textFieldConfiguration: TextFieldConfiguration(
@@ -247,6 +262,8 @@ class _FormBuilderState extends State<FormBuilder> {
                   value: field.value,
                   onChanged: (value) {
                     field.didChange(value);
+                    if (formControl.onChanged != null)
+                      formControl.onChanged(value);
                   },
                 ),
               );
@@ -284,12 +301,16 @@ class _FormBuilderState extends State<FormBuilder> {
                       groupValue: field.value,
                       onChanged: (dynamic value) {
                         field.didChange(value);
+                        if (formControl.onChanged != null)
+                          formControl.onChanged(value);
                       },
                     ),
                     onTap: () {
                       var selectedValue = formControls[count].value =
                           formControls[count].options[i].value;
                       field.didChange(selectedValue);
+                      if (formControl.onChanged != null)
+                        formControl.onChanged(selectedValue);
                     },
                   ),
                   Divider(
@@ -352,6 +373,8 @@ class _FormBuilderState extends State<FormBuilder> {
                     ),
                     onValueChanged: (dynamic value) {
                       field.didChange(value);
+                      if (formControl.onChanged != null)
+                        formControl.onChanged(value);
                     },
                   ),
                 ),
@@ -392,11 +415,15 @@ class _FormBuilderState extends State<FormBuilder> {
                       value: field.value,
                       onChanged: (bool value) {
                         field.didChange(value);
+                        if (formControl.onChanged != null)
+                          formControl.onChanged(value);
                       },
                     ),
                     onTap: () {
                       bool newValue = !(field.value ?? false);
                       field.didChange(newValue);
+                      if (formControl.onChanged != null)
+                        formControl.onChanged(newValue);
                     },
                   ),
                 );
@@ -431,6 +458,8 @@ class _FormBuilderState extends State<FormBuilder> {
                   size: 24.0,
                   onChange: (value) {
                     field.didChange(value);
+                    if (formControl.onChanged != null)
+                      formControl.onChanged(value);
                   },
                 ),
               );
@@ -465,6 +494,8 @@ class _FormBuilderState extends State<FormBuilder> {
                   iconSize: formControl.iconSize ?? 24.0,
                   onTap: (value) {
                     field.didChange(value);
+                    if (formControl.onChanged != null)
+                      formControl.onChanged(value);
                   },
                 ),
               );
@@ -504,11 +535,15 @@ class _FormBuilderState extends State<FormBuilder> {
                     value: field.value ?? false,
                     onChanged: (bool value) {
                       field.didChange(value);
+                      if (formControl.onChanged != null)
+                        formControl.onChanged(value);
                     },
                   ),
                   onTap: () {
                     bool newValue = !(field.value ?? false);
                     field.didChange(newValue);
+                    if (formControl.onChanged != null)
+                      formControl.onChanged(newValue);
                   },
                 ),
               );
@@ -548,6 +583,8 @@ class _FormBuilderState extends State<FormBuilder> {
                         divisions: formControl.divisions,
                         onChanged: (double value) {
                           field.didChange(value);
+                          if (formControl.onChanged != null)
+                            formControl.onChanged(value);
                         },
                       ),
                       Row(
@@ -595,6 +632,8 @@ class _FormBuilderState extends State<FormBuilder> {
                                 .value
                                 .remove(formControls[count].options[i].value);
                           field.didChange(formControls[count].value);
+                          if (formControl.onChanged != null)
+                            formControl.onChanged(formControls[count].value);
                         },
                       ),
                       title: Text(
@@ -611,6 +650,8 @@ class _FormBuilderState extends State<FormBuilder> {
                               .value
                               .remove(formControls[count].options[i].value);
                         field.didChange(formControls[count].value);
+                        if (formControl.onChanged != null)
+                          formControl.onChanged(formControls[count].value);
                       },
                     ),
                     Divider(
@@ -657,8 +698,10 @@ class _FormBuilderState extends State<FormBuilder> {
                     errorText: field.errorText,
                   ),
                   findSuggestions: formControl.suggestionsCallback,
-                  onChanged: (data) {
-                    field.didChange(data);
+                  onChanged: (value) {
+                    field.didChange(value);
+                    if (formControl.onChanged != null)
+                      formControl.onChanged(value);
                   },
                   chipBuilder: formControl.chipBuilder,
                   suggestionBuilder: formControl.suggestionBuilder,
@@ -726,6 +769,8 @@ class _FormBuilderState extends State<FormBuilder> {
                 .format(selectedDate); //TODO: Ask user for format
             _inputController.value =
                 TextEditingValue(text: selectedDateFormatted);
+            if (formControl.onChanged != null)
+              formControl.onChanged(selectedDateFormatted);
           }
         });
       },
@@ -763,9 +808,11 @@ class _FormBuilderState extends State<FormBuilder> {
           // initialTime: new Time, //FIXME: Parse time from string
         ).then((selectedTime) {
           if (selectedTime != null) {
-            String selectedDateFormatted = selectedTime.format(context);
+            String selectedTimeFormatted = selectedTime.format(context);
             _inputController.value =
-                TextEditingValue(text: selectedDateFormatted);
+                TextEditingValue(text: selectedTimeFormatted);
+            if (formControl.onChanged != null)
+              formControl.onChanged(selectedTimeFormatted);
           }
         });
       },

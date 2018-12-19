@@ -37,6 +37,8 @@ class FormBuilderInput {
   String hint;
   dynamic value;
   bool require;
+  ValueChanged<dynamic> onChanged;
+
   num min;
   int divisions;
   num max;
@@ -71,6 +73,7 @@ class FormBuilderInput {
     this.hint,
     this.value,
     this.require = false,
+    this.onChanged,
     this.validator,
     this.min,
     this.max,
@@ -86,6 +89,7 @@ class FormBuilderInput {
     this.hint,
     this.value,
     this.require = false,
+    this.onChanged,
     this.validator,
   }) {
     type = FormBuilderInput.TYPE_TYPE_AHEAD;
@@ -100,6 +104,7 @@ class FormBuilderInput {
     this.max,
     this.require = false,
     this.validator,
+    this.onChanged,
   }) : assert(min == null || max == null || min <= max,
             "Min cannot be higher than Max") {
     type = FormBuilderInput.TYPE_NUMBER;
@@ -115,6 +120,7 @@ class FormBuilderInput {
     this.step,
     this.require = false,
     this.validator,
+    this.onChanged,
   }) : assert(min == null || max == null || min <= max,
             "Min cannot be higher than Max") {
     type = FormBuilderInput.TYPE_STEPPER;
@@ -130,6 +136,7 @@ class FormBuilderInput {
     this.hint,
     this.require = false,
     this.validator,
+    this.onChanged,
   }) : assert(max > value || value == null,
             "Initial value cannot be higher than Max") {
     type = FormBuilderInput.TYPE_RATE;
@@ -145,6 +152,7 @@ class FormBuilderInput {
     this.hint,
     this.require = false,
     this.validator,
+    this.onChanged,
   }) {
     type = FormBuilderInput.TYPE_SLIDER;
   }
@@ -157,6 +165,7 @@ class FormBuilderInput {
     this.value,
     this.require = false,
     this.validator,
+    this.onChanged,
   }) {
     type = FormBuilderInput.TYPE_DROPDOWN;
   }
@@ -169,6 +178,7 @@ class FormBuilderInput {
     this.value,
     this.require = false,
     this.validator,
+    this.onChanged,
   }) {
     type = FormBuilderInput.TYPE_RADIO;
   }
@@ -181,6 +191,7 @@ class FormBuilderInput {
     this.value,
     this.require = false,
     this.validator,
+    this.onChanged,
   }) {
     type = FormBuilderInput.TYPE_SEGMENTED_CONTROL;
   }
@@ -192,6 +203,7 @@ class FormBuilderInput {
     this.value,
     this.require = false,
     this.validator,
+    this.onChanged,
   }) : assert(value == null || value is bool,
             "Initial value for a checkbox should be boolean") {
     type = FormBuilderInput.TYPE_CHECKBOX;
@@ -204,6 +216,7 @@ class FormBuilderInput {
     this.value,
     this.require = false,
     this.validator,
+    this.onChanged,
   }) : assert(value == null || value is bool,
             "Initial value for a switch should be boolean") {
     type = FormBuilderInput.TYPE_SWITCH;
@@ -217,6 +230,7 @@ class FormBuilderInput {
     this.value,
     this.require = false,
     this.validator,
+    this.onChanged,
   }) : assert(value == null || value is List) {
     value == value ?? []; // ignore: unnecessary_statements
     type = FormBuilderInput.TYPE_CHECKBOX_LIST;
@@ -231,6 +245,7 @@ class FormBuilderInput {
     this.value,
     this.require = false,
     this.validator,
+    this.onChanged,
   }) {
     type = FormBuilderInput.TYPE_DATE_PICKER;
   }
@@ -244,6 +259,7 @@ class FormBuilderInput {
     this.value,
     this.require = false,
     this.validator,
+    this.onChanged,
   }) {
     type = FormBuilderInput.TYPE_TIME_PICKER;
   }
@@ -258,6 +274,7 @@ class FormBuilderInput {
     this.value,
     this.require = false,
     this.validator,
+    this.onChanged,
   }) : assert(value == null || value is List) {
     type = FormBuilderInput.TYPE_CHIPS_INPUT;
   }
