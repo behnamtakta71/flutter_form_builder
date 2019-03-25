@@ -403,7 +403,7 @@ class MyHomePageState extends State<MyHomePage> {
                         // readonly: true,
                         require: true,
                         // readonly: true,
-                        min: 3,
+                        // min: 3,
                         onChanged: (newVal) {
                           print(newVal);
                           print(_fbKey.currentState

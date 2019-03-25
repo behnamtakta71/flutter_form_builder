@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chips_input/flutter_chips_input.dart';
 import 'package:flutter_form_builder/src/form_builder.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:signature/signature.dart';
 import 'package:intl/intl.dart';
+import 'package:signature/signature.dart';
 import 'package:sy_flutter_widgets/sy_flutter_widgets.dart';
 
 import './form_builder_input_option.dart';
 
 // ignore: must_be_immutable
-class FormBuilderInput extends StatefulWidget {
+class FormBuilderInput extends StatelessWidget {
   static const String TYPE_TEXT = "Text";
   static const String TYPE_NUMBER = "Number";
   static const String TYPE_EMAIL = "Email";
@@ -102,8 +102,7 @@ class FormBuilderInput extends StatefulWidget {
     this.maxLines = 5,
     this.autovalidate = false,
     this.onChanged,
-  })
-      : assert(min == null || min is int),
+  })  : assert(min == null || min is int),
         assert(max == null || max is int);
 
   FormBuilderInput.password({
@@ -116,8 +115,7 @@ class FormBuilderInput extends StatefulWidget {
     this.validator,
     this.min,
     this.max,
-  })
-      : assert(min == null || min is int),
+  })  : assert(min == null || min is int),
         assert(max == null || max is int) {
     type = FormBuilderInput.TYPE_PASSWORD;
   }
@@ -181,11 +179,10 @@ class FormBuilderInput extends StatefulWidget {
     this.max,
     this.require = false,
     this.validator,
-  })
-      : assert(min == null || min is num),
+  })  : assert(min == null || min is num),
         assert(max == null || max is num),
         assert(min == null || max == null || min <= max,
-        "Min cannot be higher than Max") {
+            "Min cannot be higher than Max") {
     type = FormBuilderInput.TYPE_NUMBER;
   }
 
@@ -200,11 +197,10 @@ class FormBuilderInput extends StatefulWidget {
     this.step,
     this.require = false,
     this.validator,
-  })
-      : assert(min == null || min is num),
+  })  : assert(min == null || min is num),
         assert(max == null || max is num),
         assert(min == null || max == null || min <= max,
-        "Min cannot be higher than Max") {
+            "Min cannot be higher than Max") {
     type = FormBuilderInput.TYPE_STEPPER;
   }
 
@@ -219,10 +215,9 @@ class FormBuilderInput extends StatefulWidget {
     this.iconSize,
     this.require = false,
     this.validator,
-  })
-      : assert(max == null || max is num),
+  })  : assert(max == null || max is num),
         assert(max > value || value == null,
-        "Initial value cannot be higher than Max") {
+            "Initial value cannot be higher than Max") {
     type = FormBuilderInput.TYPE_RATE;
   }
 
@@ -237,8 +232,7 @@ class FormBuilderInput extends StatefulWidget {
     this.divisions,
     this.require = false,
     this.validator,
-  })
-      : assert(min == null || min is num),
+  })  : assert(min == null || min is num),
         assert(max == null || max is num) {
     type = FormBuilderInput.TYPE_SLIDER;
   }
@@ -293,7 +287,7 @@ class FormBuilderInput extends StatefulWidget {
     this.require = false,
     this.validator,
   }) : assert(value == null || value is bool,
-  "Initial value for a checkbox should be boolean") {
+            "Initial value for a checkbox should be boolean") {
     type = FormBuilderInput.TYPE_CHECKBOX;
   }
 
@@ -307,7 +301,7 @@ class FormBuilderInput extends StatefulWidget {
     this.require = false,
     this.validator,
   }) : assert(value == null || value is bool,
-  "Initial value for a switch should be boolean") {
+            "Initial value for a switch should be boolean") {
     type = FormBuilderInput.TYPE_SWITCH;
   }
 
@@ -343,7 +337,8 @@ class FormBuilderInput extends StatefulWidget {
   }) /*: assert(min == null || min is DateTime),
         assert(max == null || max is DateTime),
         assert(min == null || firstDate == null),
-        assert(max == null || lastDate == null)*/ {
+        assert(max == null || lastDate == null)*/
+  {
     type = FormBuilderInput.TYPE_DATE_PICKER;
   }
 
@@ -365,7 +360,8 @@ class FormBuilderInput extends StatefulWidget {
   }) /*: assert(min == null || min is DateTime),
         assert(max == null || max is DateTime),
         assert(min == null || firstDate == null),
-        assert(max == null || lastDate == null) */{
+        assert(max == null || lastDate == null) */
+  {
     type = FormBuilderInput.TYPE_DATE_TIME_PICKER;
   }
 
@@ -396,18 +392,17 @@ class FormBuilderInput extends StatefulWidget {
     type = FormBuilderInput.TYPE_CHIPS_INPUT;
   }
 
+/*
   @override
   FormBuilderInputState createState() => FormBuilderInputState();
 }
 
 class FormBuilderInputState extends State<FormBuilderInput> {
-  GlobalKey<FormFieldState> _fieldKey;
-
   @override
   void initState() {
-    _fieldKey = GlobalKey(debugLabel: widget.attribute);
+    _fieldKey = GlobalKey(debugLabel: attribute);
     super.initState();
-  }
+  }*/
 
   final _dateTimeFormats = {
     InputType.both: DateFormat("EEEE, MMMM d, yyyy 'at' h:mma"),
@@ -415,11 +410,12 @@ class FormBuilderInputState extends State<FormBuilderInput> {
     InputType.time: DateFormat("HH:mm"),
   };
 
-  get value => _fieldKey.currentState.value;
+  // get value => _fieldKey.currentState.value;
 
   @override
   Widget build(BuildContext context) {
-    switch (widget.type) {
+    GlobalKey<FormFieldState> _fieldKey = GlobalKey(debugLabel: attribute);
+    switch (type) {
       case FormBuilderInput.TYPE_TEXT:
       case FormBuilderInput.TYPE_PASSWORD:
       case FormBuilderInput.TYPE_NUMBER:
@@ -428,7 +424,7 @@ class FormBuilderInputState extends State<FormBuilderInput> {
       case FormBuilderInput.TYPE_URL:
       case FormBuilderInput.TYPE_MULTILINE_TEXT:
         TextInputType keyboardType;
-        switch (widget.type) {
+        switch (type) {
           case FormBuilderInput.TYPE_NUMBER:
             keyboardType = TextInputType.number;
             break;
@@ -450,87 +446,62 @@ class FormBuilderInputState extends State<FormBuilderInput> {
         }
         return TextFormField(
           key: _fieldKey,
-          enabled: !(widget.readonly || widget.readonly),
-          style: (widget.readonly || widget.readonly)
-              ? Theme
-              .of(context)
-              .textTheme
-              .subhead
-              .copyWith(
-            color: Theme
-                .of(context)
-                .disabledColor,
-          )
+          enabled: !(readonly || readonly),
+          style: (readonly || readonly)
+              ? Theme.of(context).textTheme.subhead.copyWith(
+                    color: Theme.of(context).disabledColor,
+                  )
               : null,
-          focusNode: (widget.readonly || widget.readonly)
-              ? AlwaysDisabledFocusNode()
-              : null,
-          decoration: widget.decoration.copyWith(
-            enabled: !(widget.readonly || widget.readonly),
+          focusNode: (readonly || readonly) ? AlwaysDisabledFocusNode() : null,
+          decoration: decoration.copyWith(
+            enabled: !(readonly || readonly),
           ),
-          autovalidate: widget.autovalidate ?? false,
-          initialValue:
-          widget.value != null ? "${widget.value}" : '',
-          maxLines:
-          widget.type == FormBuilderInput.TYPE_MULTILINE_TEXT
-              ? widget.maxLines
-              : 1,
+          autovalidate: autovalidate ?? false,
+          initialValue: value != null ? "${value}" : '',
+          maxLines: type == FormBuilderInput.TYPE_MULTILINE_TEXT ? maxLines : 1,
           keyboardType: keyboardType,
-          obscureText:
-          widget.type == FormBuilderInput.TYPE_PASSWORD
-              ? true
-              : false,
+          obscureText: type == FormBuilderInput.TYPE_PASSWORD ? true : false,
           onFieldSubmitted: (data) {
-            if (widget.onChanged != null)
-              widget.onChanged(data);
+            if (onChanged != null) onChanged(data);
           },
           validator: (val) {
-            if (widget.require && val.isEmpty)
-              return "${widget.attribute} is required";
+            if (require && val.isEmpty) return "${attribute} is required";
 
-            if (widget.type == FormBuilderInput.TYPE_NUMBER) {
+            if (type == FormBuilderInput.TYPE_NUMBER) {
               if (num.tryParse(val) == null && val.isNotEmpty)
                 return "$val is not a valid number";
-              if (widget.max != null &&
-                  num.tryParse(val) > widget.max)
-                return "${widget.attribute} should not be greater than ${widget
-                    .max}";
-              if (widget.min != null &&
-                  num.tryParse(val) < widget.min)
-                return "${widget.attribute} should not be less than ${widget
-                    .min}";
+              if (max != null && num.tryParse(val) > max)
+                return "${attribute} should not be greater than ${max}";
+              if (min != null && num.tryParse(val) < min)
+                return "${attribute} should not be less than ${min}";
             } else {
-              if (widget.max != null &&
-                  val.length > widget.max)
-                return "${widget.attribute} should have ${widget
-                    .max} character(s) or less";
-              if (widget.min != null &&
-                  val.length < widget.min)
-                return "${widget.attribute} should have ${widget
-                    .min} character(s) or more";
+              if (max != null && val.length > max)
+                return "${attribute} should have ${max} character(s) or less";
+              if (min != null && val.length < min)
+                return "${attribute} should have ${min} character(s) or more";
             }
 
-            if (widget.type == FormBuilderInput.TYPE_EMAIL &&
-                val.isNotEmpty) {
+            if (type == FormBuilderInput.TYPE_EMAIL && val.isNotEmpty) {
               Pattern pattern =
                   r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
               if (!RegExp(pattern).hasMatch(val))
                 return '$val is not a valid email address';
             }
 
-            if (widget.type == FormBuilderInput.TYPE_URL &&
-                val.isNotEmpty) {
+            if (type == FormBuilderInput.TYPE_URL && val.isNotEmpty) {
               Pattern pattern =
                   r"(https?|ftp)://([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:‌​,.;]*)?";
               if (!RegExp(pattern, caseSensitive: false).hasMatch(val))
                 return '$val is not a valid URL';
             }
 
-            if (widget.validator != null)
-              return widget.validator(val);
+            if (validator != null) return validator(val);
           },
-          onSaved: (val){
-            FormBuilder.of(context).key.currentState.updateFieldValue(widget.attribute, val);
+          onSaved: (val) {
+            FormBuilder.of(context)
+                .key
+                .currentState
+                .updateFieldValue(attribute, val);
           },
           // autovalidate: ,
         );
@@ -540,24 +511,25 @@ class FormBuilderInputState extends State<FormBuilderInput> {
         return DateTimePickerFormField(
           key: _fieldKey,
           inputType: InputType.both,
-          initialValue: widget.value,
-          format: widget.format != null
-              ? DateFormat(widget.format)
+          initialValue: value,
+          format: format != null
+              ? DateFormat(format)
               : _dateTimeFormats[InputType.both],
-          enabled: !(widget.readonly || widget.readonly),
-          firstDate: widget.firstDate,
-          lastDate: widget.lastDate,
-          decoration: widget.decoration.copyWith(
-            enabled: !(widget.readonly || widget.readonly),
+          enabled: !(readonly || readonly),
+          firstDate: firstDate,
+          lastDate: lastDate,
+          decoration: decoration.copyWith(
+            enabled: !(readonly || readonly),
           ),
           validator: (val) {
-            if (widget.require && val == null)
-              return "${widget.attribute} is required";
-            if (widget.validator != null)
-              return widget.validator(val);
+            if (require && val == null) return "${attribute} is required";
+            if (validator != null) return validator(val);
           },
-          onSaved: (val){
-            FormBuilder.of(context).key.currentState.updateFieldValue(widget.attribute, val);
+          onSaved: (val) {
+            FormBuilder.of(context)
+                .key
+                .currentState
+                .updateFieldValue(attribute, val);
           },
         );
         break;
@@ -566,24 +538,25 @@ class FormBuilderInputState extends State<FormBuilderInput> {
         return DateTimePickerFormField(
           key: _fieldKey,
           inputType: InputType.date,
-          initialValue: widget.value,
-          format: widget.format != null
-              ? DateFormat(widget.format)
+          initialValue: value,
+          format: format != null
+              ? DateFormat(format)
               : _dateTimeFormats[InputType.date],
-          enabled: !(widget.readonly || widget.readonly),
-          firstDate: widget.firstDate,
-          lastDate: widget.lastDate,
-          decoration: widget.decoration.copyWith(
-            enabled: !(widget.readonly || widget.readonly),
+          enabled: !(readonly || readonly),
+          firstDate: firstDate,
+          lastDate: lastDate,
+          decoration: decoration.copyWith(
+            enabled: !(readonly || readonly),
           ),
           validator: (val) {
-            if (widget.require && val == null)
-              return "${widget.attribute} is required";
-            if (widget.validator != null)
-              return widget.validator(val);
+            if (require && val == null) return "${attribute} is required";
+            if (validator != null) return validator(val);
           },
-          onSaved: (val){
-            FormBuilder.of(context).key.currentState.updateFieldValue(widget.attribute, val);
+          onSaved: (val) {
+            FormBuilder.of(context)
+                .key
+                .currentState
+                .updateFieldValue(attribute, val);
           },
         );
         break;
@@ -592,174 +565,166 @@ class FormBuilderInputState extends State<FormBuilderInput> {
         return DateTimePickerFormField(
           key: _fieldKey,
           inputType: InputType.time,
-          initialValue: widget.value,
-          format: widget.format != null
-              ? DateFormat(widget.format)
+          initialValue: value,
+          format: format != null
+              ? DateFormat(format)
               : _dateTimeFormats[InputType.time],
-          enabled: !(widget.readonly || widget.readonly),
-          decoration: widget.decoration.copyWith(
-            enabled: !(widget.readonly || widget.readonly),
+          enabled: !(readonly || readonly),
+          decoration: decoration.copyWith(
+            enabled: !(readonly || readonly),
           ),
           validator: (val) {
-            if (widget.require && val == null)
-              return "${widget.attribute} is required";
-            if (widget.validator != null)
-              return widget.validator(val);
+            if (require && val == null) return "${attribute} is required";
+            if (validator != null) return validator(val);
           },
-          onSaved: (val){
-            FormBuilder.of(context).key.currentState.updateFieldValue(widget.attribute, val);
+          onSaved: (val) {
+            FormBuilder.of(context)
+                .key
+                .currentState
+                .updateFieldValue(attribute, val);
           },
         );
         break;
 
       case FormBuilderInput.TYPE_TYPE_AHEAD:
         TextEditingController _typeAheadController =
-        TextEditingController(text: widget.value);
+            TextEditingController(text: value);
         return TypeAheadFormField(
           key: _fieldKey,
           textFieldConfiguration: TextFieldConfiguration(
-            enabled: !(widget.readonly || widget.readonly),
+            enabled: !(readonly || readonly),
             controller: _typeAheadController,
-            style: (widget.readonly || widget.readonly)
-                ? Theme
-                .of(context)
-                .textTheme
-                .subhead
-                .copyWith(
-              color: Theme
-                  .of(context)
-                  .disabledColor,
-            )
+            style: (readonly || readonly)
+                ? Theme.of(context).textTheme.subhead.copyWith(
+                      color: Theme.of(context).disabledColor,
+                    )
                 : null,
-            focusNode: (widget.readonly || widget.readonly)
-                ? AlwaysDisabledFocusNode()
-                : null,
-            decoration: widget.decoration.copyWith(
-              enabled: !(widget.readonly || widget.readonly),
+            focusNode:
+                (readonly || readonly) ? AlwaysDisabledFocusNode() : null,
+            decoration: decoration.copyWith(
+              enabled: !(readonly || readonly),
             ),
           ),
-          suggestionsCallback: widget.suggestionsCallback,
-          itemBuilder: widget.itemBuilder,
+          suggestionsCallback: suggestionsCallback,
+          itemBuilder: itemBuilder,
           transitionBuilder: (context, suggestionsBox, controller) =>
-          suggestionsBox,
+              suggestionsBox,
           onSuggestionSelected: (suggestion) {
             _typeAheadController.text = suggestion;
           },
           validator: (val) {
-            if (widget.require && val.isEmpty)
-              return '${widget.attribute} is required';
-            if (widget.validator != null)
-              return widget.validator(val);
+            if (require && val.isEmpty) return '${attribute} is required';
+            if (validator != null) return validator(val);
           },
-          onSaved: (val){
-            FormBuilder.of(context).key.currentState.updateFieldValue(widget.attribute, val);
+          onSaved: (val) {
+            FormBuilder.of(context)
+                .key
+                .currentState
+                .updateFieldValue(attribute, val);
           },
-          getImmediateSuggestions: widget.getImmediateSuggestions,
-          errorBuilder: widget.errorBuilder,
-          noItemsFoundBuilder: widget.noItemsFoundBuilder,
-          loadingBuilder: widget.loadingBuilder,
-          debounceDuration: widget.debounceDuration,
-          suggestionsBoxDecoration:
-          widget.suggestionsBoxDecoration,
-          suggestionsBoxVerticalOffset:
-          widget.suggestionsBoxVerticalOffset,
-          // transitionBuilder: widget.transitionBuilder,
-          animationDuration: widget.animationDuration,
-          animationStart: widget.animationStart,
-          direction: widget.direction,
-          hideOnLoading: widget.hideOnLoading,
-          hideOnEmpty: widget.hideOnEmpty,
-          hideOnError: widget.hideOnError,
-          hideSuggestionsOnKeyboardHide:
-          widget.hideSuggestionsOnKeyboardHide,
-          keepSuggestionsOnLoading:
-          widget.keepSuggestionsOnLoading,
+          getImmediateSuggestions: getImmediateSuggestions,
+          errorBuilder: errorBuilder,
+          noItemsFoundBuilder: noItemsFoundBuilder,
+          loadingBuilder: loadingBuilder,
+          debounceDuration: debounceDuration,
+          suggestionsBoxDecoration: suggestionsBoxDecoration,
+          suggestionsBoxVerticalOffset: suggestionsBoxVerticalOffset,
+          // transitionBuilder: transitionBuilder,
+          animationDuration: animationDuration,
+          animationStart: animationStart,
+          direction: direction,
+          hideOnLoading: hideOnLoading,
+          hideOnEmpty: hideOnEmpty,
+          hideOnError: hideOnError,
+          hideSuggestionsOnKeyboardHide: hideSuggestionsOnKeyboardHide,
+          keepSuggestionsOnLoading: keepSuggestionsOnLoading,
         );
         break;
 
       case FormBuilderInput.TYPE_DROPDOWN:
         return FormField(
           key: _fieldKey,
-          enabled: !(widget.readonly || widget.readonly),
-          initialValue: widget.value,
+          enabled: !(readonly || readonly),
+          initialValue: value,
           validator: (val) {
-            if (widget.require && val == null)
-              return "${widget.attribute} is required";
-            if (widget.validator != null)
-              return widget.validator(val);
+            if (require && val == null) return "${attribute} is required";
+            if (validator != null) return validator(val);
           },
-          onSaved: (val){
-            FormBuilder.of(context).key.currentState.updateFieldValue(widget.attribute, val);
+          onSaved: (val) {
+            FormBuilder.of(context)
+                .key
+                .currentState
+                .updateFieldValue(attribute, val);
           },
           builder: (FormFieldState<dynamic> field) {
             return InputDecorator(
-              decoration: widget.decoration.copyWith(
-                enabled: !(widget.readonly || widget.readonly),
+              decoration: decoration.copyWith(
+                enabled: !(readonly || readonly),
                 errorText: field.errorText,
                 contentPadding: EdgeInsets.only(top: 10.0, bottom: 0.0),
                 border: InputBorder.none,
               ),
               child: DropdownButton(
                 isExpanded: true,
-                // hint: Text(widget.hint ?? ''), //TODO: Dropdown may require hint
-                items: widget.options.map((option) {
+                // hint: Text(hint ?? ''), //TODO: Dropdown may require hint
+                items: options.map((option) {
                   return DropdownMenuItem(
                     child: Text("${option.label ?? option.value}"),
                     value: option.value,
                   );
                 }).toList(),
                 value: field.value,
-                onChanged: (widget.readonly || widget.readonly)
+                onChanged: (readonly || readonly)
                     ? null
                     : (value) {
-                  field.didChange(value);
-                },
+                        field.didChange(value);
+                      },
               ),
             );
           },
         );
         break;
 
-    //TODO: For TYPE_CHECKBOX, TYPE_CHECKBOX_LIST, TYPE_RADIO allow user to choose if checkbox/radio to appear before or after Label
+      //TODO: For TYPE_CHECKBOX, TYPE_CHECKBOX_LIST, TYPE_RADIO allow user to choose if checkbox/radio to appear before or after Label
       case FormBuilderInput.TYPE_RADIO:
         return FormField(
           key: _fieldKey,
-          enabled: !widget.readonly && !widget.readonly,
-          initialValue: widget.value,
+          enabled: !readonly && !readonly,
+          initialValue: value,
           validator: (value) {
-            if (widget.require && value == null)
-              return "${widget.attribute} is required";
-            if (widget.validator != null)
-              return widget.validator(value);
+            if (require && value == null) return "${attribute} is required";
+            if (validator != null) return validator(value);
           },
-          onSaved: (val){
-            FormBuilder.of(context).key.currentState.updateFieldValue(widget.attribute, val);
+          onSaved: (val) {
+            FormBuilder.of(context)
+                .key
+                .currentState
+                .updateFieldValue(attribute, val);
           },
           builder: (FormFieldState<dynamic> field) {
             List<Widget> radioList = [];
-            for (int i = 0; i < widget.options.length; i++) {
+            for (int i = 0; i < options.length; i++) {
               radioList.addAll([
                 ListTile(
                   dense: true,
                   isThreeLine: false,
                   contentPadding: EdgeInsets.all(0.0),
                   leading: null,
-                  title: Text(
-                      "${widget.options[i].label ?? widget.options[i].value}"),
+                  title: Text("${options[i].label ?? options[i].value}"),
                   trailing: Radio<dynamic>(
-                    value: widget.options[i].value,
+                    value: options[i].value,
                     groupValue: field.value,
-                    onChanged: (widget.readonly || widget.readonly)
+                    onChanged: (readonly || readonly)
                         ? null
                         : (dynamic value) {
-                      field.didChange(value);
-                    },
+                            field.didChange(value);
+                          },
                   ),
-                  onTap: (widget.readonly || widget.readonly)
+                  onTap: (readonly || readonly)
                       ? null
                       : () {
-                    field.didChange(widget.options[i].value);
-                  },
+                          field.didChange(options[i].value);
+                        },
                 ),
                 Divider(
                   height: 0.0,
@@ -767,8 +732,8 @@ class FormBuilderInputState extends State<FormBuilderInput> {
               ]);
             }
             return InputDecorator(
-              decoration: widget.decoration.copyWith(
-                enabled: !(widget.readonly || widget.readonly),
+              decoration: decoration.copyWith(
+                enabled: !(readonly || readonly),
                 errorText: field.errorText,
                 contentPadding: EdgeInsets.only(top: 10.0, bottom: 0.0),
                 border: InputBorder.none,
@@ -784,64 +749,49 @@ class FormBuilderInputState extends State<FormBuilderInput> {
       case FormBuilderInput.TYPE_SEGMENTED_CONTROL:
         return FormField(
           key: _fieldKey,
-          initialValue: widget.value,
-          enabled: !(widget.readonly || widget.readonly),
+          initialValue: value,
+          enabled: !(readonly || readonly),
           validator: (value) {
-            if (widget.require && value == null)
-              return "${widget.require} is required";
-            if (widget.validator != null)
-              return widget.validator(value);
+            if (require && value == null) return "${require} is required";
+            if (validator != null) return validator(value);
           },
-          onSaved: (val){
-            FormBuilder.of(context).key.currentState.updateFieldValue(widget.attribute, val);
+          onSaved: (val) {
+            FormBuilder.of(context)
+                .key
+                .currentState
+                .updateFieldValue(attribute, val);
           },
           builder: (FormFieldState<dynamic> field) {
             return InputDecorator(
-              decoration: widget.decoration.copyWith(
-                enabled: !(widget.readonly || widget.readonly),
+              decoration: decoration.copyWith(
+                enabled: !(readonly || readonly),
                 errorText: field.errorText,
-                contentPadding:
-                EdgeInsets.only(top: 10.0, bottom: 10.0),
+                contentPadding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                 border: InputBorder.none,
               ),
               child: Padding(
                 padding: EdgeInsets.only(top: 10.0),
                 child: CupertinoSegmentedControl(
-                  borderColor: (widget.readonly || widget.readonly)
-                      ? Theme
-                      .of(context)
-                      .disabledColor
-                      : Theme
-                      .of(context)
-                      .primaryColor,
-                  selectedColor:
-                  (widget.readonly || widget.readonly)
-                      ? Theme
-                      .of(context)
-                      .disabledColor
-                      : Theme
-                      .of(context)
-                      .primaryColor,
-                  pressedColor:
-                  (widget.readonly || widget.readonly)
-                      ? Theme
-                      .of(context)
-                      .disabledColor
-                      : Theme
-                      .of(context)
-                      .primaryColor,
+                  borderColor: (readonly || readonly)
+                      ? Theme.of(context).disabledColor
+                      : Theme.of(context).primaryColor,
+                  selectedColor: (readonly || readonly)
+                      ? Theme.of(context).disabledColor
+                      : Theme.of(context).primaryColor,
+                  pressedColor: (readonly || readonly)
+                      ? Theme.of(context).disabledColor
+                      : Theme.of(context).primaryColor,
                   groupValue: field.value,
                   children: Map.fromIterable(
-                    widget.options,
+                    options,
                     key: (v) => v.value,
-                    value: (v) =>
-                        Padding(
+                    value: (v) => Padding(
                           padding: EdgeInsets.symmetric(vertical: 10.0),
                           child: Text("${v.label ?? v.value}"),
                         ),
                   ),
                   onValueChanged: (dynamic value) {
-                    if (widget.readonly || widget.readonly) {
+                    if (readonly || readonly) {
                       field.reset();
                     } else
                       field.didChange(value);
@@ -856,42 +806,44 @@ class FormBuilderInputState extends State<FormBuilderInput> {
       case FormBuilderInput.TYPE_SWITCH:
         return FormField(
             key: _fieldKey,
-            enabled: !(widget.readonly || widget.readonly),
-            initialValue: widget.value ?? false,
+            enabled: !(readonly || readonly),
+            initialValue: value ?? false,
             validator: (value) {
-              if (widget.require && value == null)
-                return "${widget.attribute} is required";
-              /*if (widget.validator != null)
-                    return widget.validator(value);*/
+              if (require && value == null) return "${attribute} is required";
+              /*if (validator != null)
+                    return validator(value);*/
             },
-            onSaved: (val){
-              FormBuilder.of(context).key.currentState.updateFieldValue(widget.attribute, val);
+            onSaved: (val) {
+              FormBuilder.of(context)
+                  .key
+                  .currentState
+                  .updateFieldValue(attribute, val);
             },
             builder: (FormFieldState<dynamic> field) {
               return InputDecorator(
-                decoration: widget.decoration.copyWith(
-                  enabled: !(widget.readonly || widget.readonly),
+                decoration: decoration.copyWith(
+                  enabled: !(readonly || readonly),
                   errorText: field.errorText,
                 ),
                 child: ListTile(
                   dense: true,
                   isThreeLine: false,
                   contentPadding: EdgeInsets.all(0.0),
-                  title: widget.label,
+                  title: label,
                   trailing: Switch(
                     value: field.value,
-                    onChanged: (widget.readonly || widget.readonly)
+                    onChanged: (readonly || readonly)
                         ? null
                         : (bool value) {
-                      field.didChange(value);
-                    },
+                            field.didChange(value);
+                          },
                   ),
-                  onTap: (widget.readonly || widget.readonly)
+                  onTap: (readonly || readonly)
                       ? null
                       : () {
-                    bool newValue = !(field.value ?? false);
-                    field.didChange(newValue);
-                  },
+                          bool newValue = !(field.value ?? false);
+                          field.didChange(newValue);
+                        },
                 ),
               );
             });
@@ -899,35 +851,36 @@ class FormBuilderInputState extends State<FormBuilderInput> {
 
       case FormBuilderInput.TYPE_STEPPER:
         return FormField(
-          enabled: !(widget.readonly || widget.readonly),
+          enabled: !(readonly || readonly),
           key: _fieldKey,
-          initialValue: widget.value,
+          initialValue: value,
           validator: (value) {
-            if (widget.require && value == null)
-              return "${widget.attribute} is required";
-            if (widget.validator != null)
-              return widget.validator(value);
+            if (require && value == null) return "${attribute} is required";
+            if (validator != null) return validator(value);
           },
-          onSaved: (val){
-            FormBuilder.of(context).key.currentState.updateFieldValue(widget.attribute, val);
+          onSaved: (val) {
+            FormBuilder.of(context)
+                .key
+                .currentState
+                .updateFieldValue(attribute, val);
           },
           builder: (FormFieldState<dynamic> field) {
             return InputDecorator(
-              decoration: widget.decoration.copyWith(
-                enabled: !(widget.readonly || widget.readonly),
+              decoration: decoration.copyWith(
+                enabled: !(readonly || readonly),
                 errorText: field.errorText,
               ),
               child: SyStepper(
                 value: field.value ?? 0,
-                step: widget.step ?? 1,
-                min: widget.min ?? 0,
-                max: widget.max ?? 9999999,
+                step: step ?? 1,
+                min: min ?? 0,
+                max: max ?? 9999999,
                 size: 24.0,
-                onChange: (widget.readonly || widget.readonly)
+                onChange: (readonly || readonly)
                     ? null
                     : (value) {
-                  field.didChange(value);
-                },
+                        field.didChange(value);
+                      },
               ),
             );
           },
@@ -936,35 +889,36 @@ class FormBuilderInputState extends State<FormBuilderInput> {
 
       case FormBuilderInput.TYPE_RATE:
         return FormField(
-          enabled: !(widget.readonly || widget.readonly),
+          enabled: !(readonly || readonly),
           key: _fieldKey,
-          initialValue: widget.value ?? 1,
+          initialValue: value ?? 1,
           validator: (value) {
-            if (widget.require && value == null)
-              return "${widget.attribute} is required";
-            if (widget.validator != null)
-              return widget.validator(value);
+            if (require && value == null) return "${attribute} is required";
+            if (validator != null) return validator(value);
           },
-          onSaved: (val){
-            FormBuilder.of(context).key.currentState.updateFieldValue(widget.attribute, val);
+          onSaved: (val) {
+            FormBuilder.of(context)
+                .key
+                .currentState
+                .updateFieldValue(attribute, val);
           },
           builder: (FormFieldState<dynamic> field) {
             return InputDecorator(
-              decoration: widget.decoration.copyWith(
-                enabled: !(widget.readonly || widget.readonly),
+              decoration: decoration.copyWith(
+                enabled: !(readonly || readonly),
                 errorText: field.errorText,
               ),
               child: SyRate(
                 value: field.value,
-                total: widget.max,
-                icon: widget.icon,
+                total: max,
+                icon: icon,
                 //TODO: When disabled change icon color (Probably deep grey)
-                iconSize: widget.iconSize ?? 24.0,
-                onTap: (widget.readonly || widget.readonly)
+                iconSize: iconSize ?? 24.0,
+                onTap: (readonly || readonly)
                     ? null
                     : (value) {
-                  field.didChange(value);
-                },
+                        field.didChange(value);
+                      },
               ),
             );
           },
@@ -974,42 +928,43 @@ class FormBuilderInputState extends State<FormBuilderInput> {
       case FormBuilderInput.TYPE_CHECKBOX:
         return FormField(
           key: _fieldKey,
-          enabled: !(widget.readonly || widget.readonly),
-          initialValue: widget.value ?? false,
+          enabled: !(readonly || readonly),
+          initialValue: value ?? false,
           validator: (value) {
-            if (widget.require && value == null)
-              return "${widget.attribute} is required";
-            if (widget.validator != null)
-              return widget.validator(value);
+            if (require && value == null) return "${attribute} is required";
+            if (validator != null) return validator(value);
           },
-          onSaved: (val){
-            FormBuilder.of(context).key.currentState.updateFieldValue(widget.attribute, val);
+          onSaved: (val) {
+            FormBuilder.of(context)
+                .key
+                .currentState
+                .updateFieldValue(attribute, val);
           },
           builder: (FormFieldState<dynamic> field) {
             return InputDecorator(
-              decoration: widget.decoration.copyWith(
-                enabled: !(widget.readonly || widget.readonly),
+              decoration: decoration.copyWith(
+                enabled: !(readonly || readonly),
                 errorText: field.errorText,
               ),
               child: ListTile(
                 dense: true,
                 isThreeLine: false,
                 contentPadding: EdgeInsets.all(0.0),
-                title: widget.label,
+                title: label,
                 trailing: Checkbox(
                   value: field.value ?? false,
-                  onChanged: (widget.readonly || widget.readonly)
+                  onChanged: (readonly || readonly)
                       ? null
                       : (bool value) {
-                    field.didChange(value);
-                  },
+                          field.didChange(value);
+                        },
                 ),
-                onTap: (widget.readonly || widget.readonly)
+                onTap: (readonly || readonly)
                     ? null
                     : () {
-                  bool newValue = !(field.value ?? false);
-                  field.didChange(newValue);
-                },
+                        bool newValue = !(field.value ?? false);
+                        field.didChange(newValue);
+                      },
               ),
             );
           },
@@ -1019,21 +974,22 @@ class FormBuilderInputState extends State<FormBuilderInput> {
       case FormBuilderInput.TYPE_SLIDER:
         return FormField(
           key: _fieldKey,
-          enabled: !(widget.readonly || widget.readonly),
-          initialValue: widget.value,
+          enabled: !(readonly || readonly),
+          initialValue: value,
           validator: (value) {
-            if (widget.require && value == null)
-              return "${widget.attribute} is required";
-            if (widget.validator != null)
-              return widget.validator(value);
+            if (require && value == null) return "${attribute} is required";
+            if (validator != null) return validator(value);
           },
-          onSaved: (val){
-            FormBuilder.of(context).key.currentState.updateFieldValue(widget.attribute, val);
+          onSaved: (val) {
+            FormBuilder.of(context)
+                .key
+                .currentState
+                .updateFieldValue(attribute, val);
           },
           builder: (FormFieldState<dynamic> field) {
             return InputDecorator(
-              decoration: widget.decoration.copyWith(
-                enabled: !(widget.readonly || widget.readonly),
+              decoration: decoration.copyWith(
+                enabled: !(readonly || readonly),
                 errorText: field.errorText,
               ),
               child: Container(
@@ -1043,22 +999,21 @@ class FormBuilderInputState extends State<FormBuilderInput> {
                   children: [
                     Slider(
                       value: field.value,
-                      min: widget.min,
-                      max: widget.max,
-                      divisions: widget.divisions,
-                      onChanged:
-                      (widget.readonly || widget.readonly)
+                      min: min,
+                      max: max,
+                      divisions: divisions,
+                      onChanged: (readonly || readonly)
                           ? null
                           : (double value) {
-                        field.didChange(value);
-                      },
+                              field.didChange(value);
+                            },
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text("${widget.min}"),
+                        Text("${min}"),
                         Text("${field.value}"),
-                        Text("${widget.max}"),
+                        Text("${max}"),
                       ],
                     ),
                   ],
@@ -1072,53 +1027,47 @@ class FormBuilderInputState extends State<FormBuilderInput> {
       case FormBuilderInput.TYPE_CHECKBOX_LIST:
         return FormField(
             key: _fieldKey,
-            enabled: !(widget.readonly || widget.readonly),
-            initialValue: widget.value ?? [],
-            validator: widget.validator,
-            onSaved: (val){
-              FormBuilder.of(context).key.currentState.updateFieldValue(widget.attribute, val);
+            enabled: !(readonly || readonly),
+            initialValue: value ?? [],
+            validator: validator,
+            onSaved: (val) {
+              FormBuilder.of(context)
+                  .key
+                  .currentState
+                  .updateFieldValue(attribute, val);
             },
             builder: (FormFieldState<dynamic> field) {
               List<Widget> checkboxList = [];
-              for (int i = 0; i < widget.options.length; i++) {
+              for (int i = 0; i < options.length; i++) {
                 checkboxList.addAll([
                   ListTile(
                     dense: true,
                     isThreeLine: false,
                     contentPadding: EdgeInsets.all(0.0),
                     leading: Checkbox(
-                      value: field.value
-                          .contains(widget.options[i].value),
-                      onChanged: (widget.readonly ||
-                          widget.readonly)
+                      value: field.value.contains(options[i].value),
+                      onChanged: (readonly || readonly)
                           ? null
                           : (bool value) {
-                        var currValue = field.value;
-                        if (value)
-                          currValue
-                              .add(widget.options[i].value);
-                        else
-                          currValue.remove(
-                              widget.options[i].value);
-                        field.didChange(currValue);
-                      },
+                              var currValue = field.value;
+                              if (value)
+                                currValue.add(options[i].value);
+                              else
+                                currValue.remove(options[i].value);
+                              field.didChange(currValue);
+                            },
                     ),
-                    title: Text(
-                        "${widget.options[i].label ??
-                            widget.options[i].value}"),
-                    onTap: (widget.readonly || widget.readonly)
+                    title: Text("${options[i].label ?? options[i].value}"),
+                    onTap: (readonly || readonly)
                         ? null
                         : () {
-                      var currentValue = field.value;
-                      if (!currentValue
-                          .contains(widget.options[i].value))
-                        currentValue
-                            .add(widget.options[i].value);
-                      else
-                        currentValue
-                            .remove(widget.options[i].value);
-                      field.didChange(currentValue);
-                    },
+                            var currentValue = field.value;
+                            if (!currentValue.contains(options[i].value))
+                              currentValue.add(options[i].value);
+                            else
+                              currentValue.remove(options[i].value);
+                            field.didChange(currentValue);
+                          },
                   ),
                   Divider(
                     height: 0.0,
@@ -1126,11 +1075,10 @@ class FormBuilderInputState extends State<FormBuilderInput> {
                 ]);
               }
               return InputDecorator(
-                decoration: widget.decoration.copyWith(
-                  enabled: !(widget.readonly || widget.readonly),
+                decoration: decoration.copyWith(
+                  enabled: !(readonly || readonly),
                   errorText: field.errorText,
-                  contentPadding:
-                  EdgeInsets.only(top: 10.0, bottom: 0.0),
+                  contentPadding: EdgeInsets.only(top: 10.0, bottom: 0.0),
                   border: InputBorder.none,
                 ),
                 child: Column(
@@ -1144,31 +1092,33 @@ class FormBuilderInputState extends State<FormBuilderInput> {
           // height: 200.0,
           child: FormField(
             key: _fieldKey,
-            enabled: !(widget.readonly || widget.readonly),
-            initialValue: widget.value ?? [],
+            enabled: !(readonly || readonly),
+            initialValue: value ?? [],
             validator: (value) {
-              if (widget.require && value.length == 0)
-                return "${widget.attribute} is required";
-              if (widget.validator != null)
-                return widget.validator(value);
+              if (require && value.length == 0)
+                return "${attribute} is required";
+              if (validator != null) return validator(value);
             },
-            onSaved: (val){
-              FormBuilder.of(context).key.currentState.updateFieldValue(widget.attribute, val);
+            onSaved: (val) {
+              FormBuilder.of(context)
+                  .key
+                  .currentState
+                  .updateFieldValue(attribute, val);
             },
             builder: (FormFieldState<dynamic> field) {
               return ChipsInput(
                 initialValue: field.value,
-                enabled: !(widget.readonly || widget.readonly),
-                decoration: widget.decoration.copyWith(
-                  enabled: !(widget.readonly || widget.readonly),
+                enabled: !(readonly || readonly),
+                decoration: decoration.copyWith(
+                  enabled: !(readonly || readonly),
                   errorText: field.errorText,
                 ),
-                findSuggestions: widget.suggestionsCallback,
+                findSuggestions: suggestionsCallback,
                 onChanged: (data) {
                   field.didChange(data);
                 },
-                chipBuilder: widget.chipBuilder,
-                suggestionBuilder: widget.suggestionBuilder,
+                chipBuilder: chipBuilder,
+                suggestionBuilder: suggestionBuilder,
               );
             },
           ),
@@ -1177,36 +1127,36 @@ class FormBuilderInputState extends State<FormBuilderInput> {
 
       case FormBuilderInput.TYPE_SIGNATURE_PAD:
         var _signatureCanvas = Signature(
-          points: widget.points,
-          width: widget.width,
-          height: widget.height,
-          backgroundColor: widget.backgroundColor,
-          penColor: widget.penColor,
-          penStrokeWidth: widget.penStrokeWidth,
+          points: points,
+          width: width,
+          height: height,
+          backgroundColor: backgroundColor,
+          penColor: penColor,
+          penStrokeWidth: penStrokeWidth,
         );
 
         return FormField<Image>(
-          key: Key(widget.attribute),
-          enabled: !(widget.readonly || widget.readonly),
-          initialValue: widget.value,
+          key: Key(attribute),
+          enabled: !(readonly || readonly),
+          initialValue: value,
           onSaved: (val) async {
             Uint8List signature = await _signatureCanvas.exportBytes();
-            var image = Image
-                .memory(signature)
-                .image;
+            var image = Image.memory(signature).image;
             _fieldKey.currentState.didChange(image);
-            FormBuilder.of(context).key.currentState.updateFieldValue(widget.attribute, val);
+            FormBuilder.of(context)
+                .key
+                .currentState
+                .updateFieldValue(attribute, val);
           },
           validator: (value) {
-            if (widget.require && _signatureCanvas.isEmpty)
-              return "${widget.attribute} is required";
-            if (widget.validator != null)
-              return widget.validator(value);
+            if (require && _signatureCanvas.isEmpty)
+              return "${attribute} is required";
+            if (validator != null) return validator(value);
           },
           builder: (FormFieldState<dynamic> field) {
             return InputDecorator(
-              decoration: widget.decoration.copyWith(
-                enabled: !(widget.readonly || widget.readonly),
+              decoration: decoration.copyWith(
+                enabled: !(readonly || readonly),
                 errorText: field.errorText,
               ),
               child: Column(
